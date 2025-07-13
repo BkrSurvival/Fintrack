@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+
+{% block title%}
+        Apology
+{% endblock %}
+
+{% block main %}
+    <img class="fit-picture" src="/static/Error_image.jpg" alt="Sorry an error occurt" />
+    <p>{{ render_message }} </p>
+{% endblock %}

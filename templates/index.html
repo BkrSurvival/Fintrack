@@ -1,0 +1,79 @@
+{% extends "layout.html"%}
+
+{%block title %}
+    Homepage
+{% endblock %}
+
+
+{% block main %}
+        <div class="d-flex flex-column align-items-center my-5 pt-5">
+            <div class="position-relative" style="width: 160px; height: 160px;">
+                <svg width="160" height="160">
+                    <circle cx="80" cy="80" r="70" stroke="#e6e6e6" stroke-width="15" fill="none"/>
+                    <circle cx="80" cy="80" r="70"
+                            stroke="{% if achieved %}#28a745{% else %}#007bff{% endif %}"
+                            stroke-width="15"
+                            stroke-dasharray="440"
+                            stroke-dashoffset="{{ 440 - (440 * progress_percentage / 100) }}"
+                            fill="none"
+                            transform="rotate(-90 80 80)" />
+                </svg>
+                {% if achieved %}
+                <div class="position-absolute top-50 start-50 translate-middle text-success fw-bold">Achieved</div>
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-between w-100 px-4 mt-2">
+                <div class="text-muted">Current: ${{ m_current }}</div>
+                <div class="text-muted">Goal: ${{ m_dream }}</div>
+            </div>
+        </div>
+
+        <h1 class = "text-body-secondary">Your Bank balance:</h1>
+        <p class="fs-1 fw-bold" style="color: green;">{{ bank_balance }} $</p>
+
+       <form action="/homepage" method="post">
+            <div class="input-group mb-3">
+                <select class="form-select w-5" name="trade" aria-label="Default select example">
+                    <option disabled selected>-Trade-</option>
+                    <option value="bought">Brought</option>
+                    <option value="recieved">Recieved</option>
+                </select>
+                <span class="input-group-text" style="width: 3rem;" id="holdings-addon">$</span>
+                <input type="number" step="0.01" class="form-control" aria-label="Amount" name="holding" placeholder="Money in Bank Account">
+                <span class="input-group-text">.00</span>
+                <input placeholder="Text" autocomplete="off" type="text" name="text" required>
+                <button type="submit" class="btn btn-outline-primary">Submit</button>
+            </div>
+        </form>
+
+
+        <h2 style = "color: gray">Last 10 Transactions</h2>
+        <table class="text-center table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Trade</th>
+                    <th>Amount</th>
+                    <th>Text</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr class="{% if loop.last %}faded-bottom{% endif %}">
+                    <td class="
+                                {% if tx.trade == 'recieved' %}
+                                    bg-success text-white
+                                {% elif tx.trade == 'bought' %}
+                                    bg-danger text-white
+                                {% endif %}
+                            ">
+                        {{ tx.trade }}</td>
+                    <td>{{ "%.2f"|format(tx.amount) }} $</td>
+                    <td>{{ tx.text }}</td>
+                    <td>{{ tx.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock %}

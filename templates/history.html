@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <h1>Transaction History</h1>
+
+    {% if transactions %}
+    <div class="d-flex flex-column align-items-center my-5 pt-5">
+        <table class="text-center table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Trade</th>
+                    <th>Amount</th>
+                    <th>Text</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr class="{% if loop.last %}faded-bottom{% endif %}">
+                    <td class="
+                                {% if tx.trade == 'recieved' %}
+                                    bg-success text-white
+                                {% elif tx.trade == 'bought' %}
+                                    bg-danger text-white
+                                {% endif %}
+                            ">
+                                {{ tx.trade }}</td>
+                    <td>{{ "%.2f"|format(tx.amount) }} $</td>
+                    <td>{{ tx.text }}</td>
+                    <td>{{ tx.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+        <p>No transactions found.</p>
+    {% endif %}
+{% endblock %}
